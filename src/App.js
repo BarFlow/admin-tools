@@ -84,6 +84,7 @@ class App extends Component {
     return fetch(req)
       .then((res) => res.json())
       .then(json => {
+        localStorage.setItem('token', json.token)
         this.setState({
           token: json.token
         }, () => this.fetchCurrentProduct())
