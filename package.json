@@ -1,5 +1,5 @@
 {
-  "name": "measure",
+  "name": "admin-tools",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -25,5 +25,5 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build&&gh-pages -d build"
   },
-  "homepage": "https://barflow.github.io/measure/"
+  "homepage": "https://barflow.github.io/admin-tools/"
 }
