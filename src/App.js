@@ -47,7 +47,7 @@ class App extends Component {
           <Navbar inverse collapseOnSelect>
             <Navbar.Header>
               <Navbar.Brand>
-                <a href='#'>Barflow - Admin</a>
+                <a href='#'>BarFlow - Admin</a>
               </Navbar.Brand>
               <Navbar.Toggle />
             </Navbar.Header>

@@ -8,6 +8,10 @@ div.imgholder img{
   max-height: 150px;
 }
 
+div.selector input[type=text]{
+  margin-bottom: 20px;
+}
+
 div.selector{
-  /*margin: 20px;*/
+  margin-bottom: 20px;
 }

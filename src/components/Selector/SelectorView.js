@@ -14,12 +14,14 @@ class SelectorView extends Component {
     super(props)
     this.state = {
       skip: parseInt(localStorage.getItem('selector_skip'), 10) || 0,
+      name: '',
       products: []
     }
     this.next = this.next.bind(this)
     this.back = this.back.bind(this)
     this.fetchCurrentProducts = this.fetchCurrentProducts.bind(this)
     this.deleteProduct = this.deleteProduct.bind(this)
+    this.handleSearchChange = this.handleSearchChange.bind(this)
   }
 
   componentDidMount () {
@@ -27,7 +29,7 @@ class SelectorView extends Component {
   }
 
   fetchCurrentProducts () {
-    const req = new Request(`${apiUrl}/products?limit=${limit}&skip=${this.state.skip}`, {
+    const req = new Request(`${apiUrl}/products?limit=${limit}&skip=${this.state.skip}&name=${this.state.name}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${this.props.token}`
@@ -53,7 +55,9 @@ class SelectorView extends Component {
 
   next () {
     window.scrollTo(0, 0)
-    localStorage.setItem('selector_skip', this.state.skip + limit)
+    if (this.state.name === '') {
+      localStorage.setItem('selector_skip', this.state.skip + limit)
+    }
     this.setState({
       skip: this.state.skip + limit
     }, () => this.fetchCurrentProducts())
@@ -61,16 +65,28 @@ class SelectorView extends Component {
 
   back () {
     window.scrollTo(0, 0)
-    localStorage.setItem('selector_skip', this.state.skip - limit)
+    if (this.state.name === '') {
+      localStorage.setItem('selector_skip', this.state.skip - limit)
+    }
     this.setState({
       skip: this.state.skip - limit
     }, () => this.fetchCurrentProducts())
+  }
+
+  handleSearchChange (e) {
+    clearTimeout(this.timer)
+    const skip = e.currentTarget.value === '' ? localStorage.getItem('selector_skip') : 0
+    this.setState({ name: e.currentTarget.value, skip })
+    this.timer = setTimeout(() => {
+      this.fetchCurrentProducts()
+    }, 500)
   }
 
   render () {
     const { products } = this.state
     return (
       <div className='selector'>
+        <input type='text' className='form-control' onChange={this.handleSearchChange} placeholder='Search' />
         {!!products.length &&
             products.map(product =>
               <ListItem key={product._id} item={product} deleteCatalogItem={this.deleteProduct} />
