@@ -43,37 +43,39 @@ class App extends Component {
   render () {
     return (
       <div className='container'>
-        <Navbar inverse collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href='#'>Barflow - Admin</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav>
-              <NavItem onClick={() => this.setState({ show: 'measure' })}>Measure</NavItem>
-              <NavItem onClick={() => this.setState({ show: 'selector' })}>Selector</NavItem>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        {!this.state.token &&
-          <div>
-            <input type='text' onChange={(e) => this.setState({
-              email: e.currentTarget.value
-            })} />
-            <input type='password' onChange={(e) => this.setState({
-              password: e.currentTarget.value
-            })} />
-            <button onClick={this.login}>Log-in</button>
-          </div>
-        }
-        {this.state.token && this.state.show === 'measure' &&
-          <MeasureView token={this.state.token} />
-        }
-        {this.state.token && this.state.show === 'selector' &&
-          <SelectorView token={this.state.token} />
-        }
+        <div className='row'>
+          <Navbar inverse collapseOnSelect>
+            <Navbar.Header>
+              <Navbar.Brand>
+                <a href='#'>Barflow - Admin</a>
+              </Navbar.Brand>
+              <Navbar.Toggle />
+            </Navbar.Header>
+            <Navbar.Collapse>
+              <Nav pullRight>
+                <NavItem onClick={() => this.setState({ show: 'measure' })}>Measure</NavItem>
+                <NavItem onClick={() => this.setState({ show: 'selector' })}>Selector</NavItem>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          {!this.state.token &&
+            <div>
+              <input type='text' onChange={(e) => this.setState({
+                email: e.currentTarget.value
+              })} />
+              <input type='password' onChange={(e) => this.setState({
+                password: e.currentTarget.value
+              })} />
+              <button onClick={this.login}>Log-in</button>
+            </div>
+          }
+          {this.state.token && this.state.show === 'measure' &&
+            <MeasureView token={this.state.token} />
+          }
+          {this.state.token && this.state.show === 'selector' &&
+            <SelectorView token={this.state.token} />
+          }
+        </div>
       </div>
     )
   }

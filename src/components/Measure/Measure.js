@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Button } from 'react-bootstrap'
 
 import './Measure.css'
 
@@ -107,12 +108,12 @@ class Measure extends Component {
           </div>
         </div>
         <div className='product-create-footer'>
-          <button onClick={back}>
+          <Button onClick={back}>
             Back
-          </button>
-          <button onClick={this._handleNext} className='pull-right'>
+          </Button>
+          <Button onClick={this._handleNext} className='pull-right'>
             Save and Next
-          </button>
+          </Button>
         </div>
       </div>
     )
