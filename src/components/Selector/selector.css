@@ -12,6 +12,11 @@ div.selector input[type=text]{
   margin-bottom: 20px;
 }
 
+.cursor{
+  display: inline-block;
+  width: 70px;
+}
+
 div.selector{
   margin-bottom: 20px;
 }
