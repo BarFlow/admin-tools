@@ -5,7 +5,7 @@ import ListItem from './ListItem'
 
 import './selector.css'
 
-const apiUrl = 'https://api.stockmate.co.uk'
+const apiUrl = 'https://api.barflow.io/v1'
 
 const limit = 30
 

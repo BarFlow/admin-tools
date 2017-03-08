@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 
 import Measure from './Measure'
 
-const apiUrl = 'https://api.stockmate.co.uk'
+const apiUrl = 'https://api.barflow.io/v1'
 
 class MeasureView extends Component {
   constructor (props) {
