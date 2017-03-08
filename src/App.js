@@ -6,7 +6,7 @@ import SelectorView from './components/Selector/SelectorView'
 
 import './App.css'
 
-const apiUrl = 'https://api.stockmate.co.uk'
+const apiUrl = 'https://api.barflow.io/v1'
 
 class App extends Component {
   constructor (props) {
