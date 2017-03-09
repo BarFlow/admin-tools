@@ -12,7 +12,7 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      token: localStorage.getItem('token') || '',
+      token: '',
       show: 'selector'
     }
     this.login = this.login.bind(this)
@@ -33,7 +33,6 @@ class App extends Component {
     return fetch(req)
       .then((res) => res.json())
       .then(json => {
-        localStorage.setItem('token', json.token)
         this.setState({
           token: json.token
         })

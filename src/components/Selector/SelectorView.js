@@ -16,7 +16,8 @@ class SelectorView extends Component {
       skip: parseInt(localStorage.getItem('selector_skip'), 10) || 0,
       name: '',
       products: [],
-      nextSkip: parseInt(localStorage.getItem('selector_skip'), 10) || 0
+      nextSkip: parseInt(localStorage.getItem('selector_skip'), 10) || 0,
+      deleted: 0
     }
     this.next = this.next.bind(this)
     this.back = this.back.bind(this)
@@ -52,7 +53,8 @@ class SelectorView extends Component {
       }
     })
     return fetch(req).then(() => this.setState({
-      products: this.state.products.filter(item => item._id !== product._id)
+      products: this.state.products.filter(item => item._id !== product._id),
+      deleted: this.state.deleted + 1
     }))
   }
 
@@ -62,8 +64,9 @@ class SelectorView extends Component {
       localStorage.setItem('selector_skip', this.state.skip + limit)
     }
     this.setState({
-      skip: this.state.skip + limit,
-      nextSkip: this.state.skip + limit
+      skip: this.state.skip - this.state.deleted + limit,
+      nextSkip: this.state.skip + limit,
+      deleted: 0
     }, () => this.fetchCurrentProducts())
   }
 
@@ -74,7 +77,8 @@ class SelectorView extends Component {
     }
     this.setState({
       skip: this.state.skip - limit,
-      nextSkip: this.state.skip - limit
+      nextSkip: this.state.skip - limit,
+      deleted: 0
     }, () => this.fetchCurrentProducts())
   }
 
@@ -84,7 +88,8 @@ class SelectorView extends Component {
       localStorage.setItem('selector_skip', this.state.nextSkip)
     }
     this.setState({
-      skip: parseInt(this.state.nextSkip, 10)
+      skip: parseInt(this.state.nextSkip, 10),
+      deleted: 0
     }, () => this.fetchCurrentProducts())
   }
 
