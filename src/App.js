@@ -3,6 +3,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap'
 
 import MeasureView from './components/Measure/MeasureView'
 import SelectorView from './components/Selector/SelectorView'
+import TypeView from './components/Type/TypeView'
 
 import './App.css'
 
@@ -54,6 +55,7 @@ class App extends Component {
               <Nav pullRight>
                 <NavItem onClick={() => this.setState({ show: 'measure' })}>Measure</NavItem>
                 <NavItem onClick={() => this.setState({ show: 'selector' })}>Selector</NavItem>
+                <NavItem onClick={() => this.setState({ show: 'type' })}>Types</NavItem>
               </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -73,6 +75,9 @@ class App extends Component {
           }
           {this.state.token && this.state.show === 'selector' &&
             <SelectorView token={this.state.token} />
+          }
+          {this.state.token && this.state.show === 'type' &&
+            <TypeView token={this.state.token} />
           }
         </div>
       </div>
