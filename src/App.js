@@ -4,6 +4,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import MeasureView from './components/Measure/MeasureView'
 import SelectorView from './components/Selector/SelectorView'
 import TypeView from './components/Type/TypeView'
+import LeadsView from './components/Leads/LeadsView'
 
 import './App.css'
 
@@ -13,8 +14,8 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      token: '',
-      show: 'selector'
+      token: localStorage.getItem('token') || '',
+      show: 'leads'
     }
     this.login = this.login.bind(this)
   }
@@ -37,6 +38,7 @@ class App extends Component {
         this.setState({
           token: json.token
         })
+        localStorage.setItem('token', json.token)
       })
   }
 
@@ -53,6 +55,7 @@ class App extends Component {
             </Navbar.Header>
             <Navbar.Collapse>
               <Nav pullRight>
+                <NavItem onClick={() => this.setState({ show: 'leads' })}>Leads</NavItem>
                 <NavItem onClick={() => this.setState({ show: 'measure' })}>Measure</NavItem>
                 <NavItem onClick={() => this.setState({ show: 'selector' })}>Selector</NavItem>
                 <NavItem onClick={() => this.setState({ show: 'type' })}>Types</NavItem>
@@ -78,6 +81,9 @@ class App extends Component {
           }
           {this.state.token && this.state.show === 'type' &&
             <TypeView token={this.state.token} />
+          }
+          {this.state.token && this.state.show === 'leads' &&
+            <LeadsView token={this.state.token} />
           }
         </div>
       </div>

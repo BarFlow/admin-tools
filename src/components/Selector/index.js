@@ -1,3 +1,3 @@
-import Selector from './Selector'
+import SelectorView from './SelectorView'
 
-export default Selector
+export default SelectorView
