@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Button, FormControl } from 'react-bootstrap'
+import { Button, Alert } from 'react-bootstrap'
 
+import LeadListFilter from './LeadListFilter'
 import ListItem from './ListItem'
 
 import './style.css'
@@ -14,26 +15,30 @@ class LeadsView extends Component {
     super(props)
     this.state = {
       skip: 0,
-      filters: {},
       leads: [],
-      deleted: 0
+      deleted: 0,
+      isFetching: false
     }
     this.next = this.next.bind(this)
     this.back = this.back.bind(this)
     this.fetchCurrentLeads = this.fetchCurrentLeads.bind(this)
     this.delete = this.delete.bind(this)
     this.update = this.update.bind(this)
-    this.handleFilterChange = this.handleFilterChange.bind(this)
+    this.create = this.create.bind(this)
   }
 
   componentDidMount () {
     this.fetchCurrentLeads()
   }
 
-  fetchCurrentLeads () {
-    const params = Object.keys(this.state.filters).map((k) => {
-      if (this.state.filters[k] !== '') {
-        return encodeURIComponent(k) + '=' + encodeURIComponent(this.state.filters[k])
+  fetchCurrentLeads (filters = {}) {
+    this.setState({
+      leads: [],
+      isFetching: true
+    })
+    const params = Object.keys(filters).map((k) => {
+      if (filters[k] !== '' && filters[k] !== true) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(filters[k])
       } else {
         return ''
       }
@@ -47,7 +52,7 @@ class LeadsView extends Component {
       })
     fetch(req)
       .then(response => response.json())
-      .then(leads => this.setState({ leads }))
+      .then(leads => this.setState({ leads, isFetching: false }))
   }
 
   delete (lead) {
@@ -89,6 +94,34 @@ class LeadsView extends Component {
     }))
   }
 
+  create (payload) {
+    const req = new Request(`${apiUrl}/leads`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.props.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ...payload,
+        silent: true
+      })
+    })
+    return fetch(req)
+      .then((res) => {
+        if (!res.ok) {
+          throw Error(res.statusText)
+        }
+        return res
+      })
+      .then(res => res.json())
+      .then((json) => this.setState({
+        leads: [
+          json,
+          ...this.state.leads
+        ]
+      }))
+  }
+
   next () {
     window.scrollTo(0, 0)
     this.setState({
@@ -105,86 +138,32 @@ class LeadsView extends Component {
     }, () => this.fetchCurrentLeads())
   }
 
-  handleFilterChange (e) {
-    clearTimeout(this.timer)
-    const skip = 0
-    const key = e.currentTarget.id
-    const value = e.currentTarget.value
-    this.setState({
-      filters: {
-        ...this.state.filters,
-        [key]: value
-      },
-      skip
-    })
-    this.timer = setTimeout(() => {
-      this.fetchCurrentLeads()
-    }, 500)
-  }
-
   render () {
     const { leads } = this.state
     return (
       <div className='leads'>
-        <div className='leadFilters'>
-          <input type='text'
-            className='form-control'
-            onChange={this.handleFilterChange}
-            id='name'
-            placeholder='Name' />
-          <input type='text'
-            className='form-control'
-            onChange={this.handleFilterChange}
-            id='email'
-            placeholder='E-mail' />
-          <input type='text'
-            className='form-control'
-            onChange={this.handleFilterChange}
-            id='comment'
-            placeholder='Comment' />
-          <FormControl
-            componentClass='select'
-            placeholder='status'
-            id='status'
-            onChange={this.handleFilterChange} >
-            <option value=''>Status</option>
-            <option value='notcontacted'>Not Contacted</option>
-            <option value='contacted'>Contacted</option>
-            <option value='interested'>Interested</option>
-            <option value='notinterested'>Not interested</option>
-            <option value='closed'>Closed</option>
-          </FormControl>
-          <FormControl
-            componentClass='select'
-            placeholder='owner'
-            id='owner'
-            onChange={this.handleFilterChange} >
-            <option value=''>Owner</option>
-            <option value='pepe'>Pepe</option>
-            <option value='redin'>Redin</option>
-          </FormControl>
-          <FormControl
-            componentClass='select'
-            placeholder='due'
-            id='due'
-            onChange={this.handleFilterChange} >
-            <option value=''>Followup Due</option>
-            <option value=''>No</option>
-            <option value='true'>Yes</option>
-          </FormControl>
-        </div>
-
+        <LeadListFilter
+          onChange={this.fetchCurrentLeads}
+          create={this.create} />
+        {this.state.isFetching &&
+          <Alert bsStyle='warning'>Loading...</Alert>
+        }
+        {!this.state.isFetching && !leads.length &&
+          <Alert bsStyle='warning'>No lead found matching this criteria.</Alert>
+        }
         {leads.map(lead =>
           <ListItem key={lead._id} item={lead} delete={this.delete} update={this.update} />
         )}
-        <div className='actions'>
-          <Button onClick={this.back}>
-            Back
-          </Button>
-          <Button onClick={this.next} className='pull-right'>
-            Next
-          </Button>
-        </div>
+        {leads.length === 30 &&
+          <div>
+            <Button onClick={this.back}>
+              Back
+            </Button>
+            <Button onClick={this.next} className='pull-right'>
+              Next
+            </Button>
+          </div>
+        }
       </div>
     )
   }

@@ -25,5 +25,5 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build&&gh-pages -d build"
   },
-  "homepage": "https://barflow.github.io/admin-tools/"
+  "homepage": "https://petergombos.github.io/barflow-admin-tools/"
 }

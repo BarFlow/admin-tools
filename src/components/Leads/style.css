@@ -4,10 +4,6 @@
   margin-right: 5px;
 }
 
-.leadFilters{
-  margin-bottom: 10px;
-}
-
 .label.label-default{
   margin-right: 5px;
   font-weight: 400;
@@ -28,10 +24,36 @@
   vertical-align: bottom;
 }
 
-.leadActions{
+.leads .actions {
   margin: 5px 0 10px;
+}
+
+.leads .actions .btn-primary{
+  float: right;
+}
+
+.lead-item .actions{
+  margin-bottom: 10px;
 }
 
 .lead-item .well{
   margin-bottom: 0;
+}
+
+.modal-body .alert{
+  margin: 10px 0 0;
+}
+
+.modal-body .form-control{
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.modal-body textarea{
+  height: 150px;
+}
+
+.leads{
+  margin-bottom: 20px;
 }

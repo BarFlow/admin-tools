@@ -2,17 +2,20 @@ import React, { Component } from 'react'
 import { Media, Button, Label, Panel, FormControl } from 'react-bootstrap'
 import DatePicker from 'react-bootstrap-date-picker'
 
-class CatalogListItem extends Component {
+import AddLeadDialog from './AddLeadDialog'
+
+class ListItem extends Component {
 
   constructor (props) {
     super(props)
 
     this.state = {
-      height: 0,
-      width: 0
+      isEditDialogOpen: false,
+      isSaving: false
     }
 
     this.handleUpdate = this.handleUpdate.bind(this)
+    this.toggleEditDialog = this.toggleEditDialog.bind(this)
   }
 
   handleUpdate (e) {
@@ -24,18 +27,32 @@ class CatalogListItem extends Component {
     })
   }
 
+  toggleEditDialog () {
+    this.setState({
+      isEditDialogOpen: !this.state.isEditDialogOpen
+    })
+  }
+
   render () {
-    const { item } = this.props
+    const { item, update } = this.props
     const { email, name, company, comment, created_at: createdAt, owner, status, source } = item
     const website = `http://${email.split('@')[1]}`
     return (
       <Panel>
+        {this.state.isEditDialogOpen &&
+          <AddLeadDialog
+            initialValues={{ ...item }}
+            close={this.toggleEditDialog}
+            isOpen
+            create={lead => update(lead._id, lead)}
+            />
+        }
         <Media className='lead-item'>
           <Media.Body>
             <Media.Heading>
-              {name} - {email} {' '}
+              {name} - {email} <Button bsSize='xs' onClick={this.toggleEditDialog}>Edit</Button>
             </Media.Heading>
-            <div className='leadActions'>
+            <div className='actions'>
               <Label><a href={website} target='_balnk'>{website}</a></Label>
               <Label>{new Date(createdAt).toDateString()}</Label>
               <Label>{company}</Label>
@@ -84,7 +101,13 @@ class CatalogListItem extends Component {
             }
           </Media.Body>
           <Media.Right>
-            <Button bsStyle='danger' onClick={() => this.props.delete(item)}>Delete</Button>
+            <Button
+              bsStyle='danger'
+              onClick={() => {
+                this.setState({ isSaving: true })
+                this.props.delete(item)
+              }}
+              disabled={this.state.isSaving}>Delete</Button>
           </Media.Right>
         </Media>
       </Panel>
@@ -92,10 +115,10 @@ class CatalogListItem extends Component {
   }
 }
 
-CatalogListItem.propTypes = {
+ListItem.propTypes = {
   item: React.PropTypes.object.isRequired,
   delete: React.PropTypes.func.isRequired,
   update: React.PropTypes.func.isRequired
 }
 
-export default CatalogListItem
+export default ListItem
